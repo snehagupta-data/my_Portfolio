@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Analysis Dashboard | Sneha Gupta</title>
+  <meta name="description" content="Case study: a five-page Power BI report on patient flow, revenue, doctor workload and medicine stock.">
+  <meta name="theme-color" content="#08172b">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Hospital Analysis Dashboard | Sneha Gupta">
+  <meta property="og:description" content="Case study: a five-page Power BI report on patient flow, revenue, doctor workload and medicine stock.">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1f3a'/%3E%3Ctext x='32' y='43' font-size='30' font-weight='700' text-anchor='middle' fill='%23f4b400' font-family='Arial'%3ESG%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body data-page="case" data-project="hospital-analysis" data-root="../">
+  <div id="scroll-progress"></div>
+  <header id="site-nav"></header>
+
+  <main>
+    <!-- Header (title, stats, tools, GitHub button) is generated from the project entry in data/portfolio-data.js -->
+    <section id="case-hero" class="case-hero"></section>
+
+    <!-- ===== CASE-STUDY BODY: plain HTML. Edit, add or delete whole <section> blocks freely. ===== -->
+    <div class="container">
+
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">01</span><h2>Executive summary</h2></div>
+        <div class="prose"><p>Hospitals generate large amounts of data, but decisions are often reactive. I brought <strong>patients, billing, doctors, rooms and pharmacy stock</strong> into one Power BI model and built a five-page dashboard so operational problems — concentration risk, discharge delays, stock risk — show up before they hurt.</p><p>The clearest finding is a revenue-concentration risk: roughly 60% of the hospital's ₹714K revenue comes from surgery alone, while room revenue looks under-used by comparison.</p></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">02</span><h2>Business problem</h2></div>
+        <p class="note"><strong>Business question:</strong> where in patient flow, billing and inventory is risk concentrated, and what should be monitored first?</p>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Problem</th><th>What the dashboard tracks</th></tr></thead><tbody><tr><td>Patient-flow bottlenecks</td><td>Discharge delays and bed occupancy</td></tr><tr><td>Revenue concentration</td><td>Billing split across surgery, tests, rooms and medicines</td></tr><tr><td>Doctor workload imbalance</td><td>Concentration of appointments across doctors</td></tr><tr><td>Inventory risk</td><td>Which medicines dominate usage and need priority stock management</td></tr></tbody></table></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">03</span><h2>Dataset</h2></div>
+        <div class="prose"><p>Seven data tables feeding a star schema, built from the hospital's original Excel exports.</p></div>
+        <p class="note"><strong>A note on scale:</strong> the dataset is small (30 patients, 15 doctors), so the value of this project is in the model and dashboard design rather than in statistically strong conclusions.</p>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">04</span><h2>Data preparation</h2></div>
+        <div class="prose"><p>The repository keeps both the original and prepared data: an <code>Original Dataset</code> folder with more than a dozen separate Excel exports (Patient, Doctor, Appointment, Rooms, Hospital Bills, Medical Stock, Surgery, Staff, Supplier and others), and a <code>Combined New Data</code> folder where these were consolidated into six tables — patient_info, appointments, bills, medicine_patient, patient_tests and medical_stock_info — which is what the Power BI model is actually built on.</p></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">05</span><h2>Data model</h2></div>
+        <div class="gallery"><figure class="shot shot--wide"><img src="../assets/images/projects/hospital-analysis/hospital-data-model.webp" alt="Power BI data model" width="1229" height="731" loading="lazy" data-zoom><figcaption><strong>Power BI data model</strong>Star schema connecting patients, doctors, billing, rooms and medicine data.</figcaption></figure></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">06</span><h2>Analytical approach</h2></div>
+        <ul class="flow"><li>12+ raw Excel exports</li><li>Consolidate to 6 tables</li><li>Star-schema model</li><li>DAX measures</li><li>5-page dashboard</li><li>Written insights</li></ul>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">07</span><h2>Key findings</h2></div>
+        <ul class="stat-row stat-row--lg"><li><b>30</b><span>patients</span></li><li><b>15</b><span>doctors</span></li><li><b>₹714K</b><span>total revenue</span></li><li><b>30</b><span>rooms</span></li><li><b>3,928</b><span>medicine units sold</span></li><li><b>4.16</b><span>average rating</span></li></ul>
+        <div class="insights"><div class="insight insight--risk"><small>Risk</small><strong>About 60% of revenue comes from surgery</strong> — a high dependency on one source of income.</div><div class="insight"><small>Watch</small><strong>ICU is close to capacity,</strong> which calls for proactive discharge planning.</div><div class="insight"><small>Watch</small><strong>Discharges dip between August and October,</strong> pointing to an operational pattern worth investigating.</div><div class="insight"><small>Watch</small><strong>Three medicines dominate usage,</strong> so they need priority stock management.</div><div class="insight"><small>Finding</small><strong>Room revenue looks under-used,</strong> suggesting an opportunity to review pricing.</div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">08</span><h2>Business recommendations</h2></div>
+        <div class="split"><div class="panel"><h3>Reduce concentration risk</h3><ul><li>Revenue mix could be diversified rather than relying on surgery alone</li><li>Room pricing is worth reviewing given its low share of revenue</li><li>ICU occupancy suggests discharge planning could be made more proactive</li></ul></div><div class="panel"><h3>Operational monitoring</h3><ul><li>The three high-usage medicines should be prioritised in stock planning</li><li>The August–October discharge dip is worth investigating for a seasonal or staffing cause</li><li>Doctor workload could be checked for concentration across a small number of doctors</li></ul></div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">09</span><h2>Dashboard showcase</h2></div>
+        <div class="prose"><p>Five report pages plus a home page for navigation. Click a screenshot to enlarge.</p></div>
+        <div class="gallery"><figure class="shot shot--wide"><img src="../assets/images/projects/hospital-analysis/hospital-overview.webp" alt="Overview" width="1282" height="695" loading="lazy" data-zoom><figcaption><strong>Overview</strong>Headline KPIs, discharge trend, charges by type and medicine tracking by weekday.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/hospital-analysis/hospital-patients.webp" alt="Patients" width="1268" height="683" loading="lazy" data-zoom><figcaption><strong>Patients</strong>Patient-level view of the flow through the hospital.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/hospital-analysis/hospital-doctors.webp" alt="Doctors" width="1267" height="680" loading="lazy" data-zoom><figcaption><strong>Doctors</strong>Doctor workload and appointments.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/hospital-analysis/hospital-operations.webp" alt="Hospital" width="1255" height="675" loading="lazy" data-zoom><figcaption><strong>Hospital</strong>Patients by age group, test results, upcoming surgeries, room status by type and doctor appointments.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/hospital-analysis/hospital-finance.webp" alt="Finance" width="1264" height="680" loading="lazy" data-zoom><figcaption><strong>Finance</strong>Revenue and billing across surgery, tests, rooms and medicines.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/hospital-analysis/hospital-home.webp" alt="Home" width="1318" height="719" loading="lazy" data-zoom><figcaption><strong>Home</strong>Landing page with navigation to every report page.</figcaption></figure></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">10</span><h2>Technical implementation</h2></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Tool</th><th>Used for</th></tr></thead><tbody><tr><td>Power BI</td><td>Model and dashboard</td></tr><tr><td>DAX</td><td>Measures and KPI cards</td></tr><tr><td>Power Query</td><td>Consolidating raw Excel exports into the model's six tables</td></tr><tr><td>Star schema</td><td>Data modelling approach</td></tr></tbody></table></div>
+        <div class="split"><div class="panel"><h3>Interaction</h3><ul><li>Drill-through to patient-level detail</li><li>Interactive filters and slicers</li><li>Dynamic KPI cards</li></ul></div><div class="panel"><h3>Analysis tools</h3><ul><li>What-if commission calculator</li><li>Medicine demand heatmap</li></ul></div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">11</span><h2>Limitations &amp; assumptions</h2></div>
+<div class="panel"><h3>Worth keeping in mind</h3><ul><li>The dataset is small (30 patients, 15 doctors) — treat findings as illustrative of the approach, not as statistically robust conclusions.</li><li>No information is available on whether this reflects one hospital's real data or a prepared sample; figures are presented as given in the source files.</li><li>No causal analysis was performed — the discharge dip and ICU occupancy are observations, not diagnosed causes.</li></ul></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">12</span><h2>Explore the code</h2></div>
+        <div class="prose"><p>The repository includes both the original Excel exports and the combined tables used in the model, alongside the Power BI file.</p></div>
+        <div class="file-list"><a href="https://github.com/snehagupta-data/hospital-analysis-dashboard/tree/main/Dashboard%20Image" target="_blank" rel="noopener noreferrer"><span>Dashboard Image<small>Every report page as an image</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/hospital-analysis-dashboard/tree/main/Dataset" target="_blank" rel="noopener noreferrer"><span>Dataset<small>Original and combined Excel data</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/hospital-analysis-dashboard/blob/main/Hospital%20Analysis%20Dashboard.pbix" target="_blank" rel="noopener noreferrer"><span>Hospital Analysis Dashboard.pbix<small>The Power BI report file</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/hospital-analysis-dashboard#readme" target="_blank" rel="noopener noreferrer"><span>README<small>Full project write-up</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      </section>
+    </div>
+  </main>
+
+  <nav id="case-pager" class="pager" aria-label="Next project"></nav>
+  <footer id="site-footer"></footer>
+
+  <script src="../data/portfolio-data.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

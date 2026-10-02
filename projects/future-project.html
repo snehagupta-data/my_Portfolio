@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Future Project Template | Sneha Gupta</title>
+  <meta name="description" content="Template for a new case-study page.">
+  <meta name="theme-color" content="#08172b">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Future Project Template | Sneha Gupta">
+  <meta property="og:description" content="Template for a new case-study page.">
+  <meta name="twitter:card" content="summary">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1f3a'/%3E%3Ctext x='32' y='43' font-size='30' font-weight='700' text-anchor='middle' fill='%23f4b400' font-family='Arial'%3ESG%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body data-page="case" data-project="your-project-id" data-root="../">
+  <div id="scroll-progress"></div>
+  <header id="site-nav"></header>
+
+  <main>
+    <!-- Header (title, stats, tools, GitHub button) is generated from the project entry in data/portfolio-data.js -->
+    <section id="case-hero" class="case-hero"><div class="container"><a class="back-link" href="../projects.html">← Back to Projects</a><h1 class="case-title">Future project template</h1><p class="case-summary">This box is replaced by the project header once <code>data-project</code> on the &lt;body&gt; matches a project id in <code>data/portfolio-data.js</code>.</p></div></section>
+
+    <!-- ===== CASE-STUDY BODY: plain HTML. Edit, add or delete whole <section> blocks freely. ===== -->
+    <div class="container">
+
+      <!-- ================================================================
+           FUTURE PROJECT TEMPLATE — DUPLICATE AND EDIT
+           1. Duplicate this file, e.g. projects/my-new-project.html
+           2. Add the project to data/portfolio-data.js (copy the template comment there)
+           3. Set data-project="…" on <body> to that project's id
+           4. Keep the sections you need, delete the rest. Numbers (01, 02…) are just labels.
+           This file is not linked from the site and is kept out of search results.
+           ================================================================ -->
+
+      <!-- MODULE: Executive Summary (2-3 sentences: what, why, headline finding) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">01</span><h2>Executive summary</h2></div>
+        <div class="prose"><p>What was investigated, on what data, and the single most important finding.</p></div>
+      </section>
+
+      <!-- MODULE: Business Problem (bold the literal business question) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">02</span><h2>Business problem</h2></div>
+        <p class="note"><strong>Business question:</strong> state it as one sentence.</p>
+      </section>
+
+      <!-- MODULE: Dataset (+ a synthetic/simulated/sample note if applicable — never hide this) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">03</span><h2>Dataset</h2></div>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Table</th><th>Role</th><th>Records</th></tr></thead>
+          <tbody><tr><td>example_table</td><td>What it holds</td><td>0</td></tr></tbody>
+        </table></div>
+        <p class="note">Say plainly if the data is synthetic, simulated, or a small sample — and never invent a figure you can't verify from the project files.</p>
+      </section>
+
+      <!-- MODULE: Data preparation (only claim steps you can verify were actually done) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">04</span><h2>Data preparation</h2></div>
+        <div class="prose"><p>What cleaning, validation or consolidation actually happened, per the repository.</p></div>
+      </section>
+
+      <!-- MODULE: Data model / SQL architecture (table + optional model image) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">05</span><h2>Data model &amp; SQL architecture</h2></div>
+        <div class="gallery">
+          <figure class="shot shot--wide">
+            <img src="../assets/images/projects/my-new-project/data-model.webp" alt="Describe the data model" width="1400" height="800" loading="lazy" data-zoom>
+            <figcaption><strong>Data model</strong>One line on the schema or model shape.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- MODULE: Analytical approach (workflow strip — adapt the steps to the real pipeline) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">06</span><h2>Analytical approach</h2></div>
+        <ul class="flow"><li>Raw data</li><li>Cleaning</li><li>Modelling</li><li>Analysis</li><li>Dashboard</li><li>Insights</li></ul>
+      </section>
+
+      <!-- MODULE: SQL / Python (code block with copy button) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">07</span><h2>Query showcase</h2></div>
+        <div class="code-block">
+          <div class="code-head"><span>query_name.sql</span><button class="copy-btn" type="button">Copy</button></div>
+          <pre><code>SELECT 1;</code></pre>
+        </div>
+      </section>
+
+      <!-- MODULE: Findings (classes: insight--risk, insight--good, or none for a neutral finding) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">08</span><h2>Key findings</h2></div>
+        <div class="insights">
+          <div class="insight insight--risk"><small>Risk</small>Only use numbers you can verify from the project files.</div>
+          <div class="insight insight--good"><small>Strength</small>Another finding.</div>
+        </div>
+      </section>
+
+      <!-- MODULE: Recommendations (two panels side by side; use careful language — "could", "suggests", "worth monitoring") -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">09</span><h2>Business recommendations</h2></div>
+        <div class="split">
+          <div class="panel"><h3>Panel title</h3><ul><li>Point one</li><li>Point two</li></ul></div>
+          <div class="panel"><h3>Panel title</h3><ul><li>Point one</li><li>Point two</li></ul></div>
+        </div>
+      </section>
+
+      <!-- MODULE: Dashboard gallery (add class "shot--wide" to span two columns; skip this module if the project has no dashboard) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">10</span><h2>Dashboard showcase</h2></div>
+        <div class="gallery">
+          <figure class="shot shot--wide">
+            <img src="../assets/images/projects/my-new-project/page-name.webp" alt="Describe the screenshot" width="1400" height="800" loading="lazy" data-zoom>
+            <figcaption><strong>Page name</strong>One line on what this page shows.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- MODULE: Technical implementation -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">11</span><h2>Technical implementation</h2></div>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Tool</th><th>Used for</th></tr></thead>
+          <tbody><tr><td>Tool name</td><td>What it did in this project</td></tr></tbody>
+        </table></div>
+      </section>
+
+      <!-- MODULE: Limitations & assumptions (this makes the project MORE credible, not less — keep it short) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">12</span><h2>Limitations &amp; assumptions</h2></div>
+        <div class="panel"><h3>Worth keeping in mind</h3><ul><li>e.g. dataset is synthetic / a small sample</li><li>e.g. no causal inference was performed</li></ul></div>
+      </section>
+
+      <!-- MODULE: Project files (links to real GitHub folders only — never a "#" placeholder) -->
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">13</span><h2>Explore the code</h2></div>
+        <div class="file-list">
+          <a href="https://github.com/snehagupta-data/your-repo" target="_blank" rel="noopener noreferrer"><span>Repository<small>What it contains</small></span></a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <nav id="case-pager" class="pager" aria-label="Next project"></nav>
+  <footer id="site-footer"></footer>
+
+  <script src="../data/portfolio-data.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

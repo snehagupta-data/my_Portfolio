@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopKart India — Profitability &amp; Growth Analytics | Sneha Gupta</title>
+  <meta name="description" content="Case study: SQL, Python and Power BI analysis of why an Indian e-commerce marketplace&#x27;s profit lags its sales growth.">
+  <meta name="theme-color" content="#08172b">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ShopKart India — Profitability &amp; Growth Analytics | Sneha Gupta">
+  <meta property="og:description" content="Case study: SQL, Python and Power BI analysis of why an Indian e-commerce marketplace&#x27;s profit lags its sales growth.">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1f3a'/%3E%3Ctext x='32' y='43' font-size='30' font-weight='700' text-anchor='middle' fill='%23f4b400' font-family='Arial'%3ESG%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body data-page="case" data-project="shopkart" data-root="../">
+  <div id="scroll-progress"></div>
+  <header id="site-nav"></header>
+
+  <main>
+    <!-- Header (title, stats, tools, GitHub button) is generated from the project entry in data/portfolio-data.js -->
+    <section id="case-hero" class="case-hero"></section>
+
+    <!-- ===== CASE-STUDY BODY: plain HTML. Edit, add or delete whole <section> blocks freely. ===== -->
+    <div class="container">
+
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">01</span><h2>Executive summary</h2></div>
+        <div class="prose"><p>ShopKart India is a <strong>synthetic B2C marketplace</strong> connecting customers with third-party sellers. I analysed a 12-table relational dataset in PostgreSQL and Python, then built an 8-page Power BI report, to find out why profit wasn't growing as fast as sales.</p><p>Revenue is ₹1.75bn, up 43.90% year on year — but profit is only ₹215.30M at a 12.33% margin, with 38.80% of revenue sitting in low-margin territory and 8.56% actively loss-making. The analysis traces this to discount-heavy revenue, product-level returns and delivery delays concentrated in a few warehouses — not to weak sales.</p></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">02</span><h2>Business problem</h2></div>
+        <p class="note"><strong>Business question:</strong> why isn't profitability improving despite strong sales growth — and how much of the revenue is actually sustainable?</p>
+        <div class="split"><div class="panel"><h3>Questions investigated</h3><ul><li>Which products, categories and sellers earn weak margins?</li><li>Where do discounts help sales, and where do they destroy margin?</li><li>Who creates value, and who is drifting toward churn?</li></ul></div><div class="panel"><h3>…and the leaks</h3><ul><li>How much value is lost to returns and refunds?</li><li>Where are fulfilment and delivery bottlenecks?</li><li>Is growth outpacing revenue quality?</li></ul></div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">03</span><h2>Dataset</h2></div>
+        <div class="prose"><p>12 relational tables covering customers, sellers, products, categories, orders, order items, payments, shipments, returns, warehouses, delivery partners and locations, spanning 2022–2025.</p></div>
+        <p class="note"><strong>Dataset note:</strong> ShopKart is a synthetic marketplace generated for portfolio analysis — the figures demonstrate analytical methodology, not a real company's performance.</p>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">04</span><h2>Data preparation</h2></div>
+        <div class="prose"><p>Before any analysis, the data was validated rather than assumed clean: row counts, duplicate keys, missing values, key uniqueness, foreign-key integrity, and recalculated revenue, cost, profit and discount figures to confirm they matched their component fields.</p></div>
+        <p class="note">Odd values were <em>not</em> deleted automatically — negative item-level profit was kept because it can be a genuine business finding (a loss-making SKU), not a data error.</p>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">05</span><h2>Data model &amp; SQL architecture</h2></div>
+        <div class="split"><div class="panel"><h3>SQL — PostgreSQL</h3><ul><li>26 analysis scripts in 7 topic folders</li><li>Profitability, discount effectiveness, retention & RFM, cohorts, returns, delivery, integrated diagnosis</li><li>Schema, views and a long data-validation script</li></ul></div><div class="panel"><h3>Power BI — model</h3><ul><li>Fact tables: FactSales, FactReturns, shipments</li><li>Eight dimensions including date, customer, product, seller, warehouse and RFM segment</li><li>A dedicated measures table for DAX</li></ul></div><div class="panel"><h3>RFM segmentation</h3><ul><li>Customers scored 1–5 on recency, frequency and monetary value</li><li>Segments: Champions, Loyal, Potential Loyalists, New / Promising, At Risk, Lost / Dormant</li><li>Thresholds are analytical choices, not universal rules</li></ul></div></div>
+        <div class="code-block"><div class="code-head"><span>sql/DISCOUNT EFFECTIVENESS — Performance by Discount Band</span><button class="copy-btn" type="button">Copy</button></div><pre><code>SELECT
+    CASE
+        WHEN discount_percent = 0 THEN &#x27;0% — No Discount&#x27;
+        WHEN discount_percent &lt;= 10 THEN &#x27;1–10%&#x27;
+        WHEN discount_percent &lt;= 20 THEN &#x27;11–20%&#x27;
+        WHEN discount_percent &lt;= 30 THEN &#x27;21–30%&#x27;
+        WHEN discount_percent &lt;= 40 THEN &#x27;31–40%&#x27;
+        ELSE &#x27;40%+&#x27;
+    END AS discount_band,
+    COUNT(DISTINCT order_id) AS total_orders,
+    SUM(quantity) AS units_sold,
+    ROUND(SUM(item_revenue), 2) AS revenue,
+    ROUND(SUM(discount_amount), 2) AS total_discount,
+    ROUND(SUM(item_profit), 2) AS profit,
+    ROUND(SUM(item_profit) / NULLIF(SUM(item_revenue), 0) * 100, 2) AS profit_margin_percent
+FROM vw_order_item_analysis
+GROUP BY 1
+ORDER BY MIN(discount_percent);</code></pre></div>
+        <p class="note">The full query in the repository also returns an effective discount rate; it is trimmed here for readability.</p>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">06</span><h2>Analytical approach</h2></div>
+        <ul class="flow"><li>12-table PostgreSQL schema</li><li>Data validation</li><li>SQL analysis (26 scripts)</li><li>Python EDA &amp; stats</li><li>Power BI model + DAX</li><li>8-page dashboard</li><li>Written insights</li></ul>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">07</span><h2>Key findings</h2></div>
+        <div class="insights"><div class="insight insight--good"><small>Strength</small><strong>₹1.75bn revenue</strong>, up 43.90% year on year, across roughly 150K orders.</div><div class="insight insight--risk"><small>Risk</small><strong>Profit is ₹215.30M at a 12.33% margin.</strong> 38.80% of revenue is low-margin and 8.56% is loss-making.</div><div class="insight insight--risk"><small>Risk</small><strong>₹197M in discounts;</strong> 80.23% of revenue comes from discounted sales (10.12% weighted discount).</div><div class="insight"><small>Watch</small><strong>Electronics</strong> is the biggest category (about ₹1.42bn) but margins turn negative at higher discount bands.</div><div class="insight insight--good"><small>Strength</small><strong>Repeat customer rate is 67.53%</strong> — retention is relatively strong overall.</div><div class="insight"><small>Watch</small><strong>4,682 At-Risk customers</strong> represent about ₹219.89M of revenue exposure.</div><div class="insight insight--risk"><small>Risk</small><strong>Direct return impact is about ₹153.20M</strong> (≈₹128M refunds + ≈₹25.43M return costs). Size/Fit and Product Quality lead the reasons.</div><div class="insight"><small>Watch</small><strong>On-time delivery is 82.74%</strong> — about 26K delayed shipments. Warehouse WH006 manages only 61.91% on-time, with 126 severe delays.</div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">08</span><h2>Business recommendations</h2></div>
+        <div class="split"><div class="panel"><h3>Protect margin</h3><ul><li>Discount depth could be set against margin, category and demand rather than applied broadly</li><li>High-discount, low-margin products are worth monitoring specifically</li><li>Indicates a shift from “sell more” toward “sell profitably”</li></ul></div><div class="panel"><h3>Reduce leakage</h3><ul><li>At-Risk customers with high historical value could be prioritised for retention</li><li>High-impact returns suggest reviewing SKU descriptions, quality and size/fit information</li><li>Operations attention could focus on WH006 and the lowest-performing delivery partners first</li></ul></div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">09</span><h2>Dashboard showcase</h2></div>
+        <div class="prose"><p>An eight-page report, each page built around one business question. Click a screenshot to enlarge.</p></div>
+        <div class="gallery"><figure class="shot shot--wide"><img src="../assets/images/projects/shopkart/shopkart-revenue-growth.webp" alt="Revenue &amp; Growth Intelligence" width="1400" height="788" loading="lazy" data-zoom><figcaption><strong>Revenue &amp; Growth Intelligence</strong>Where is growth coming from? Revenue trend by channel, region and category.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/shopkart/shopkart-profitability.webp" alt="Profitability Intelligence" width="1400" height="786" loading="lazy" data-zoom><figcaption><strong>Profitability Intelligence</strong>Which parts of the business actually create profit? Products, categories, sellers and leakage candidates.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/shopkart/shopkart-discount-margin.webp" alt="Discount &amp; Margin Intelligence" width="1400" height="783" loading="lazy" data-zoom><figcaption><strong>Discount &amp; Margin Intelligence</strong>Where do discounts help sales, and where do they destroy margin?</figcaption></figure><figure class="shot"><img src="../assets/images/projects/shopkart/shopkart-customer-retention.webp" alt="Customer Intelligence &amp; Retention" width="1400" height="780" loading="lazy" data-zoom><figcaption><strong>Customer Intelligence &amp; Retention</strong>Who creates value, and where is retention risk concentrated? RFM segments and at-risk revenue.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/shopkart/shopkart-returns-risk.webp" alt="Returns &amp; Risk Intelligence" width="1400" height="786" loading="lazy" data-zoom><figcaption><strong>Returns &amp; Risk Intelligence</strong>Where is value lost through returns? Reasons, status and product-level impact.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/shopkart/shopkart-operations-delivery.webp" alt="Operations &amp; Delivery Intelligence" width="1400" height="781" loading="lazy" data-zoom><figcaption><strong>Operations &amp; Delivery Intelligence</strong>Where are fulfilment bottlenecks? Warehouses, delivery partners and delay trends.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/shopkart/shopkart-insights.webp" alt="Insights &amp; Business Conclusion" width="1400" height="785" loading="lazy" data-zoom><figcaption><strong>Insights &amp; Business Conclusion</strong>The findings from the previous pages, rated by severity.</figcaption></figure></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">10</span><h2>Technical implementation</h2></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Tool</th><th>Used for</th></tr></thead><tbody><tr><td>PostgreSQL + pgAdmin</td><td>Relational modelling, validation and analytical SQL</td></tr><tr><td>Python (Pandas, NumPy, SciPy, Matplotlib)</td><td>Exploratory and statistical analysis</td></tr><tr><td>Power Query, Power BI, DAX</td><td>Data preparation, model and dashboard</td></tr></tbody></table></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">11</span><h2>Limitations &amp; assumptions</h2></div>
+<div class="panel"><h3>Worth keeping in mind</h3><ul><li>The dataset is <strong>synthetic</strong> and does not represent real company data.</li><li>Associations are not causation — a link between delays and customer behaviour is not proof that delays caused churn.</li><li>RFM thresholds are heuristic and would need recalibrating on a real business.</li><li>“Direct return impact” is refunds plus return costs; it ignores resale or salvage value, so it is not the full net loss.</li></ul></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">12</span><h2>Explore the code</h2></div>
+        <div class="prose"><p>The repository separates SQL, Python and Power BI work so each can be reviewed independently.</p></div>
+        <div class="file-list"><a href="https://github.com/snehagupta-data/shopkart-india-ecommerce-analytics/tree/main/sql" target="_blank" rel="noopener noreferrer"><span>sql/<small>26 analysis scripts plus schema, views and validation</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/shopkart-india-ecommerce-analytics/tree/main/python" target="_blank" rel="noopener noreferrer"><span>python/<small>The 12-section analysis notebook and output CSVs</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/shopkart-india-ecommerce-analytics/tree/main/powerbi" target="_blank" rel="noopener noreferrer"><span>powerbi/<small>The report file and a PDF export</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/shopkart-india-ecommerce-analytics/tree/main/docs" target="_blank" rel="noopener noreferrer"><span>docs/<small>Business findings and data dictionary</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/shopkart-india-ecommerce-analytics#readme" target="_blank" rel="noopener noreferrer"><span>README<small>Full project write-up</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      </section>
+    </div>
+  </main>
+
+  <nav id="case-pager" class="pager" aria-label="Next project"></nav>
+  <footer id="site-footer"></footer>
+
+  <script src="../data/portfolio-data.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

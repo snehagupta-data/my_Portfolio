@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LendX Finance — Loan Portfolio Risk Analytics | Sneha Gupta</title>
+  <meta name="description" content="Case study: PostgreSQL and Power BI analysis of loan defaults, customer quality and branch performance for a fictional lender.">
+  <meta name="theme-color" content="#08172b">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="LendX Finance — Loan Portfolio Risk Analytics | Sneha Gupta">
+  <meta property="og:description" content="Case study: PostgreSQL and Power BI analysis of loan defaults, customer quality and branch performance for a fictional lender.">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1f3a'/%3E%3Ctext x='32' y='43' font-size='30' font-weight='700' text-anchor='middle' fill='%23f4b400' font-family='Arial'%3ESG%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body data-page="case" data-project="lendx" data-root="../">
+  <div id="scroll-progress"></div>
+  <header id="site-nav"></header>
+
+  <main>
+    <!-- Header (title, stats, tools, GitHub button) is generated from the project entry in data/portfolio-data.js -->
+    <section id="case-hero" class="case-hero"></section>
+
+    <!-- ===== CASE-STUDY BODY: plain HTML. Edit, add or delete whole <section> blocks freely. ===== -->
+    <div class="container">
+
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">01</span><h2>Executive summary</h2></div>
+        <div class="prose"><p>LendX Finance is a <strong>fictional multi-segment lender</strong> offering Personal, Home, Auto, Business and BNPL loans through 20 branches across India. I investigated its ₹7.11bn loan book end to end in PostgreSQL, then built a 7-page Power BI dashboard on top of it.</p><p>The analysis found that the portfolio is <strong>technically profitable per loan but loss-making overall</strong>: unit economics look healthy (₹96.67K revenue per loan), yet credit losses on a subprime, over-leveraged customer base wipe out interest income. The clearest lever is BNPL, which carries more than twice the book's average default rate.</p></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">02</span><h2>Business problem</h2></div>
+        <p class="note"><strong>Business question:</strong> Where does risk actually sit in this loan book, and is the business earning enough to cover it?</p>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Question investigated</th><th>Why it matters</th></tr></thead><tbody><tr><td>Which loan types and credit bands default most?</td><td>Directly erodes profitability and should drive underwriting rules</td></tr><tr><td>Is repayment delay predictable before a customer defaults?</td><td>An early-warning signal could change collections timing</td></tr><tr><td>Which regions and branches combine volume with controlled risk?</td><td>Guides where to expand lending</td></tr><tr><td>Is there an under-used, genuinely low-risk customer segment?</td><td>A growth lever that doesn't add risk</td></tr></tbody></table></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">03</span><h2>Dataset</h2></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Table</th><th>Role in the model</th><th>Records in repo CSV</th></tr></thead><tbody><tr><td>loans</td><td>Fact — one row per loan (amount, rate, tenure, branch, type)</td><td>4,000</td></tr><tr><td>repayments</td><td>Fact — payment status, delay days, penalties, default flag</td><td>10,760</td></tr><tr><td>customers</td><td>Dimension — age, employment, salary, credit score</td><td>1,000</td></tr><tr><td>branches</td><td>Dimension — city, state, region</td><td>20</td></tr><tr><td>loan_types</td><td>Dimension — five products with a risk level</td><td>5</td></tr></tbody></table></div>
+        <p class="note"><strong>Dataset note:</strong> LendX is a fictional lender created for portfolio analysis. The figures demonstrate analytical methodology, not a real company's performance.</p>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">04</span><h2>Data preparation</h2></div>
+        <div class="prose"><p>The repository's PostgreSQL schema (<code>Table create cript.sql</code>) enforces data integrity at the structural level rather than through a separate cleaning stage: every table has explicit primary/foreign-key constraints, and <code>CHECK</code> constraints restrict columns such as <code>region</code> (North/South/East/West) and <code>risk_level</code> (Low/Medium/High) to valid values before any row can be loaded.</p><p>The five CSVs load directly into this validated structure — loans and repayments as facts, customers, branches and loan_types as dimensions — which is what the SQL analysis and Power BI model both sit on top of.</p></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">05</span><h2>Data model &amp; SQL architecture</h2></div>
+        <div class="gallery"><figure class="shot shot--wide"><img src="../assets/images/projects/lendx/lendx-data-model.webp" alt="Power BI data model" width="1242" height="725" loading="lazy" data-zoom><figcaption><strong>Power BI data model</strong>A star schema: two fact tables (loans, repayments) surrounded by customer, branch, loan-type and calendar dimensions.</figcaption></figure></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Section</th><th>What it answers</th></tr></thead><tbody><tr><td>1 · KPI framework</td><td>Portfolio value, default rate, NPA %, delinquency, yield, collection efficiency, average credit score</td></tr><tr><td>2 · Portfolio overview</td><td>Size of the loan book, dominant loan types, top regions</td></tr><tr><td>3 · Growth & distribution</td><td>Monthly disbursement, branch volumes, tenure distribution, high-lending cities</td></tr><tr><td>4 · Customer quality</td><td>Income vs loan size, credit-score spread, employment type, new vs old customer risk</td></tr><tr><td>5 · Risk & default</td><td>Default by loan type, region, loan size and credit score</td></tr><tr><td>6 · Profitability & efficiency</td><td>Revenue by product and region, profit vs risk, late-payment rate</td></tr><tr><td>7 · Advanced analytics</td><td>DENSE_RANK, AVG() OVER, running totals, LAG() early-warning signal, ROW_NUMBER per region</td></tr></tbody></table></div>
+        <div class="code-block"><div class="code-head"><span>SECTION 5 · Q17 — Which loan types carry the highest default risk?</span><button class="copy-btn" type="button">Copy</button></div><pre><code>SELECT lt.loan_type_name,
+       round(AVG(r.default_flag)*100,2) || &#x27; % &#x27; AS default_rate
+FROM repayments r
+JOIN loans l ON r.loan_id = l.loan_id
+JOIN loan_types lt ON l.loan_type_id = lt.loan_type_id
+GROUP BY lt.loan_type_name
+ORDER BY AVG(r.default_flag) DESC;</code></pre></div>
+        <div class="code-block"><div class="code-head"><span>SECTION 7 · Q28 — Is a customer&#x27;s delay growing? (early-warning signal)</span><button class="copy-btn" type="button">Copy</button></div><pre><code>SELECT
+    loan_id,
+    due_date,
+    delay_days,
+    LAG(delay_days) OVER (PARTITION BY loan_id ORDER BY due_date) AS prev_delay,
+    delay_days - LAG(delay_days) OVER (PARTITION BY loan_id ORDER BY due_date) AS delay_change
+FROM repayments;</code></pre></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">06</span><h2>Analytical approach</h2></div>
+        <ul class="flow"><li>Schema design (DDL + constraints)</li><li>Load 5 CSVs</li><li>SQL analysis (7 sections)</li><li>Power BI star-schema model</li><li>DAX measures</li><li>7-page dashboard</li><li>Written insights</li></ul>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">07</span><h2>Key findings</h2></div>
+        <div class="insights"><div class="insight insight--risk"><small>Risk</small><strong>The portfolio is loss-making overall</strong> — ₹386.7M revenue and ₹75.6Cr interest income are fully offset by credit losses, a net loss of about ₹204Cr.</div><div class="insight insight--risk"><small>Risk</small><strong>BNPL defaults at 20.5%</strong> — 582 loans on a ₹31.3M book. Risk levels look unsustainable.</div><div class="insight insight--risk"><small>Risk</small><strong>Average credit score is 512</strong> with a debt-to-income ratio of 2.12: a subprime, heavily leveraged customer base.</div><div class="insight"><small>Watch</small><strong>Personal Loans</strong> lead by volume (1,241 loans) but default at 11.2% — the largest contributor to portfolio risk.</div><div class="insight"><small>Watch</small><strong>December default rate spikes to 12.3%</strong>; every other month sits between 7.5% and 10.0%.</div><div class="insight"><small>Watch</small><strong>East region lags:</strong> 807 loans, ₹1.4bn book, 9.8% default — the weakest risk-return profile.</div><div class="insight insight--good"><small>Strength</small><strong>Home Loans</strong> are ₹4.5bn (63% of the book) with a 4.9% default rate — the largest and safest segment.</div><div class="insight insight--good"><small>Strength</small><strong>Maharashtra</strong> leads: 618 loans, ₹1.03bn book, ₹55.5M revenue, 8.8% default.</div><div class="insight insight--good"><small>Strength</small><strong>Premium customers</strong> (52, or 5.3%) average a 734 score and 7.0% default — an under-used growth segment.</div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">08</span><h2>Business recommendations</h2></div>
+        <div class="split"><div class="panel"><h3>Reduce risk</h3><ul><li>Could tighten BNPL approval rules or cap its share of the book</li><li>Worth testing a minimum credit-score threshold around 650</li><li>Should monitor collections performance in the East region specifically</li></ul></div><div class="panel"><h3>Grow safely</h3><ul><li>Home Loans look like the segment to lean into — large, low-default</li><li>The Premium segment (734 avg score, 7.0% default) suggests room to grow without adding risk</li><li>The LAG()-based delay signal could be monitored as an early warning before a loan defaults</li></ul></div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">09</span><h2>Dashboard showcase</h2></div>
+        <div class="prose"><p>A navigable report with a home page, seven analysis pages and two drill-through detail views. Click any screenshot to enlarge.</p></div>
+        <div class="gallery"><figure class="shot shot--wide"><img src="../assets/images/projects/lendx/lendx-executive-overview.webp" alt="Executive Overview" width="1400" height="844" loading="lazy" data-zoom><figcaption><strong>Executive Overview</strong>Headline KPIs — revenue, loan book, default rate — with loans and revenue by year and default rate by loan type.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/lendx/lendx-risk-default.webp" alt="Risk &amp; Default Analysis" width="1400" height="847" loading="lazy" data-zoom><figcaption><strong>Risk &amp; Default Analysis</strong>Default rate by loan type, credit band and month, plus a ranked list of the riskiest customers.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/lendx/lendx-growth-time-analysis.webp" alt="Growth &amp; Time Analysis" width="1400" height="841" loading="lazy" data-zoom><figcaption><strong>Growth &amp; Time Analysis</strong>How disbursement and revenue move over time.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/lendx/lendx-customer-insights.webp" alt="Customer Insights" width="1400" height="838" loading="lazy" data-zoom><figcaption><strong>Customer Insights</strong>Customer segments by credit score, income and employment type.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/lendx/lendx-customer-insights-detail.webp" alt="Customer Insights — detail view" width="1400" height="755" loading="lazy" data-zoom><figcaption><strong>Customer Insights — detail view</strong>Drill-through to customer-level records.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/lendx/lendx-loan-portfolio.webp" alt="Loan Portfolio Analysis" width="1400" height="829" loading="lazy" data-zoom><figcaption><strong>Loan Portfolio Analysis</strong>Composition of the loan book by product and region.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/lendx/lendx-loan-portfolio-detail.webp" alt="Loan Portfolio — detail view" width="1377" height="768" loading="lazy" data-zoom><figcaption><strong>Loan Portfolio — detail view</strong>Drill-through to individual loans.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/lendx/lendx-branch-performance.webp" alt="Branch Performance" width="1400" height="837" loading="lazy" data-zoom><figcaption><strong>Branch Performance</strong>Branch-level volume, revenue and default comparison.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/lendx/lendx-insights.webp" alt="Insights" width="1276" height="759" loading="lazy" data-zoom><figcaption><strong>Insights</strong>The written conclusions, colour-coded by severity.</figcaption></figure><figure class="shot"><img src="../assets/images/projects/lendx/lendx-home.webp" alt="Home" width="1400" height="845" loading="lazy" data-zoom><figcaption><strong>Home</strong>Landing page with project context and button navigation.</figcaption></figure></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">10</span><h2>Technical implementation</h2></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Tool</th><th>Used for</th></tr></thead><tbody><tr><td>PostgreSQL</td><td>Database design, DDL and all SQL analytics</td></tr><tr><td>Power BI Desktop</td><td>Data modelling and interactive dashboards</td></tr><tr><td>DAX</td><td>Measures such as Default Rate %, Total Revenue, On-Time Payment %, Total Loan Book</td></tr><tr><td>Power Query (M)</td><td>Data transformation and cleaning</td></tr></tbody></table></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">11</span><h2>Limitations &amp; assumptions</h2></div>
+<div class="panel"><h3>Worth keeping in mind</h3><ul><li>LendX is a fictional lender; figures demonstrate method, not real-world performance.</li><li>No causal inference was performed — the default-rate differences by loan type and region are associations, not proven causes.</li><li>The early-warning delay signal (LAG) is illustrative; it has not been back-tested as a predictive model.</li><li>RFM-style segment thresholds (e.g. "Premium") are analytical choices, not an industry standard.</li></ul></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">12</span><h2>Explore the code</h2></div>
+        <div class="prose"><p>The repository contains the full PostgreSQL schema, all seven SQL analysis sections, the Power BI file and every dashboard page as an image.</p></div>
+        <div class="file-list"><a href="https://github.com/snehagupta-data/LendX-Finance-Loan-Portfolio-Performance-Risk-Analytics/tree/main/SQL%20Analysis" target="_blank" rel="noopener noreferrer"><span>SQL Analysis<small>Schema script and seven analysis sections</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/LendX-Finance-Loan-Portfolio-Performance-Risk-Analytics/tree/main/Power%20BI%20Dashboard" target="_blank" rel="noopener noreferrer"><span>Power BI Dashboard<small>The .pbix file and a PDF export</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/LendX-Finance-Loan-Portfolio-Performance-Risk-Analytics/tree/main/Dashboard%20Image" target="_blank" rel="noopener noreferrer"><span>Dashboard Image<small>Every dashboard page as an image</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/LendX-Finance-Loan-Portfolio-Performance-Risk-Analytics/tree/main/Data" target="_blank" rel="noopener noreferrer"><span>Data<small>The five source CSV files</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/LendX-Finance-Loan-Portfolio-Performance-Risk-Analytics#readme" target="_blank" rel="noopener noreferrer"><span>README<small>Full project write-up</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      </section>
+    </div>
+  </main>
+
+  <nav id="case-pager" class="pager" aria-label="Next project"></nav>
+  <footer id="site-footer"></footer>
+
+  <script src="../data/portfolio-data.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

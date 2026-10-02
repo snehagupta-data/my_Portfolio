@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Transaction &amp; Revenue Analytics | Sneha Gupta</title>
+  <meta name="description" content="Case study: an eleven-script PostgreSQL workflow on a five-table e-commerce database — revenue, customers, products and payments.">
+  <meta name="theme-color" content="#08172b">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Customer Transaction &amp; Revenue Analytics | Sneha Gupta">
+  <meta property="og:description" content="Case study: an eleven-script PostgreSQL workflow on a five-table e-commerce database — revenue, customers, products and payments.">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1f3a'/%3E%3Ctext x='32' y='43' font-size='30' font-weight='700' text-anchor='middle' fill='%23f4b400' font-family='Arial'%3ESG%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body data-page="case" data-project="customer-transaction" data-root="../">
+  <div id="scroll-progress"></div>
+  <header id="site-nav"></header>
+
+  <main>
+    <!-- Header (title, stats, tools, GitHub button) is generated from the project entry in data/portfolio-data.js -->
+    <section id="case-hero" class="case-hero"></section>
+
+    <!-- ===== CASE-STUDY BODY: plain HTML. Edit, add or delete whole <section> blocks freely. ===== -->
+    <div class="container">
+
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">01</span><h2>Executive summary</h2></div>
+        <div class="prose"><p>A <strong>SQL-only analytics project</strong> on a simulated e-commerce database, run as eleven staged scripts — schema design, loading, validation, exploration, then revenue, customer, product and payment analysis, finishing with advanced window-function SQL and written insights.</p><p>There's no dashboard here on purpose: the point is what can be shown with well-structured PostgreSQL alone. The payment-health check below is one example of the kind of question the workflow answers.</p></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">02</span><h2>Business problem</h2></div>
+        <p class="note"><strong>Business question:</strong> what do revenue, customer, product and payment patterns look like once the data is properly validated and modelled — and where is value leaking?</p>
+        <div class="split"><div class="panel"><h3>Questions investigated</h3><ul><li>Where is revenue concentrated across products and time?</li><li>What's the gap in value between repeat and one-time customers?</li><li>Which cohorts retain, and how does RFM segment the customer base?</li></ul></div><div class="panel"><h3>Payments</h3><ul><li>How often do payments fail, and is it concentrated in one method?</li><li>How much order value is at risk from failed payments?</li></ul></div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">03</span><h2>Dataset</h2></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Table</th><th>Records</th><th>Notes</th></tr></thead><tbody><tr><td>customers</td><td>10,000</td><td>City and signup date</td></tr><tr><td>products</td><td>500</td><td>Category and price</td></tr><tr><td>orders</td><td>100,000</td><td>Order dates run from 2022-01-01 to 2024-12-31</td></tr><tr><td>order_items</td><td>275,000</td><td>Quantity and price at purchase</td></tr><tr><td>payments</td><td>100,000</td><td>One payment record per order; status Success, Failed or Pending</td></tr></tbody></table></div>
+        <p class="note"><strong>Dataset note:</strong> this is a simulated e-commerce database built for portfolio analysis; record counts were computed directly from the repository's CSV files.</p>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">04</span><h2>Data preparation</h2></div>
+        <div class="prose"><p>Script 03 validates the loaded data before any analysis runs: NULL checks on key fields across customers, orders and order_items, duplicate-key detection (repeated emails, repeated order IDs), and referential-integrity checks between tables.</p></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">05</span><h2>Data model &amp; SQL architecture</h2></div>
+        <div class="gallery"><figure class="shot shot--wide"><img src="../assets/images/projects/customer-transaction/customer-transaction-schema.svg" alt="Database schema" width="1120" height="560" loading="lazy" data-zoom><figcaption><strong>Database schema</strong>Five tables in third normal form. Gold marks primary and foreign keys; dashed lines are the relationships.</figcaption></figure></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Script</th><th>What it does</th></tr></thead><tbody><tr><td>01_schema.sql</td><td>CREATE TABLE statements with constraints</td></tr><tr><td>02_data_loading.sql</td><td>Load order and COPY commands</td></tr><tr><td>03_data_validation.sql</td><td>NULL checks, duplicates, foreign-key integrity</td></tr><tr><td>04_eda.sql</td><td>Exploratory analysis, including percentile calculations</td></tr><tr><td>05_revenue_analysis.sql</td><td>Revenue KPIs and trends</td></tr><tr><td>06_customer_analysis.sql</td><td>Lifetime value, segmentation, retention</td></tr><tr><td>07_product_analysis.sql</td><td>Best sellers, Pareto, category ranking</td></tr><tr><td>08_order_analysis.sql</td><td>Average order value, frequency, peak periods</td></tr><tr><td>09_payment_analysis.sql</td><td>Payment methods, failures, revenue at risk</td></tr><tr><td>10_advanced_sql.sql</td><td>Window functions, cohorts, RFM, month-on-month growth</td></tr><tr><td>11_business_insights.sql</td><td>Insights written up as annotated SQL</td></tr></tbody></table></div>
+        <ul class="chips"><li>Joins</li><li>CTEs</li><li>Aggregations</li><li>RANK / DENSE_RANK / ROW_NUMBER</li><li>LAG / LEAD</li><li>Running totals &amp; moving averages</li><li>NTILE bucketing</li><li>CASE WHEN segmentation</li><li>Cohort analysis</li><li>RFM scoring</li><li>PERCENTILE_CONT</li></ul>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">06</span><h2>Analytical approach</h2></div>
+        <ul class="flow"><li>Schema (01)</li><li>Load data (02)</li><li>Validate (03)</li><li>EDA (04)</li><li>Revenue → Payments (05–09)</li><li>Advanced SQL (10)</li><li>Business insights (11)</li></ul>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">07</span><h2>Key findings</h2></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Payment status</th><th>Payments</th><th>Share of payments</th><th>Share of order value</th></tr></thead><tbody><tr><td>Success</td><td>85,026</td><td>85.03%</td><td>85.06%</td></tr><tr><td>Failed</td><td>9,910</td><td>9.91%</td><td>9.84%</td></tr><tr><td>Pending</td><td>5,064</td><td>5.06%</td><td>5.09%</td></tr></tbody></table></div>
+        <div class="insights"><div class="insight"><small>Watch</small><strong>Roughly one payment in ten fails</strong> (9.91% of payments, 9.84% of order value).</div><div class="insight"><small>Finding</small><strong>Failure rates are similar across every payment method</strong> (about 9.3–10.1%) — no single method stands out, a reasonable result for simulated data.</div><div class="insight"><small>Finding</small><strong>Pending payments hold about 5% of order value</strong> at any snapshot in time.</div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">08</span><h2>Business recommendations</h2></div>
+<div class="panel"><h3>If this were a live system</h3><ul><li>A consistently elevated failure rate on one payment method would be worth escalating to the payment gateway.</li><li>The revenue-at-risk query below could run as a recurring check rather than a one-off report.</li><li>Cohort retention and RFM segments could feed directly into a targeted re-engagement campaign for “At Risk” customers.</li></ul></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">09</span><h2>Query showcase</h2></div>
+        <div class="prose"><p>No dashboard here — the SQL itself is the deliverable. One example, in full:</p></div>
+        <div class="code-block"><div class="code-head"><span>09_payment_analysis.sql · Query 29 — Failed transactions: revenue at risk</span><button class="copy-btn" type="button">Copy</button></div><pre><code>SELECT
+    p.payment_method,
+    COUNT(p.payment_id)                AS failed_transactions,
+    ROUND(SUM(o.total_amount), 2)      AS revenue_at_risk
+FROM payments p
+JOIN orders o ON p.order_id = o.order_id
+WHERE p.payment_status = &#x27;Failed&#x27;
+GROUP BY p.payment_method
+ORDER BY revenue_at_risk DESC;</code></pre></div>
+        <div class="split"><div class="panel"><h3>Revenue &amp; products</h3><ul><li>Revenue concentration across products (Pareto)</li><li>Monthly and seasonal revenue patterns</li><li>Category pricing and order-value trends</li></ul></div><div class="panel"><h3>Customers &amp; payments</h3><ul><li>Returning versus one-time customer value</li><li>Cohort retention and RFM segments</li><li>Never-ordered customers as an activation group</li></ul></div></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">10</span><h2>Technical implementation</h2></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Tool</th><th>Used for</th></tr></thead><tbody><tr><td>PostgreSQL</td><td>Database engine</td></tr><tr><td>pgAdmin</td><td>Query execution and database management</td></tr><tr><td>SQL</td><td>Everything else</td></tr></tbody></table></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">11</span><h2>Limitations &amp; assumptions</h2></div>
+<div class="panel"><h3>Worth keeping in mind</h3><ul><li>The database is simulated; figures demonstrate SQL technique, not a real platform's transaction history.</li><li>No causal inference was performed — cohort and RFM patterns are descriptive, not diagnosed causes.</li><li>Payment-failure analysis is a snapshot of the loaded data, not a time-series of gateway incidents.</li></ul></div>
+      </section>
+      <section class="cs-section">
+        <div class="cs-head"><span class="cs-num">12</span><h2>Explore the code</h2></div>
+        <div class="prose"><p>The repository is organised as eleven numbered scripts, run in order, plus a separate annotated insights file.</p></div>
+        <div class="file-list"><a href="https://github.com/snehagupta-data/Customer-Transaction-Revenue-Analytics-System-using-SQL/tree/main/sql_analysis" target="_blank" rel="noopener noreferrer"><span>sql_analysis/<small>The eleven staged SQL scripts</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/Customer-Transaction-Revenue-Analytics-System-using-SQL/tree/main/business_insights" target="_blank" rel="noopener noreferrer"><span>business_insights/<small>Annotated business-insights query file</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/Customer-Transaction-Revenue-Analytics-System-using-SQL/tree/main/data" target="_blank" rel="noopener noreferrer"><span>data/<small>The five CSV source files</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><a href="https://github.com/snehagupta-data/Customer-Transaction-Revenue-Analytics-System-using-SQL#readme" target="_blank" rel="noopener noreferrer"><span>README<small>Full project write-up</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      </section>
+    </div>
+  </main>
+
+  <nav id="case-pager" class="pager" aria-label="Next project"></nav>
+  <footer id="site-footer"></footer>
+
+  <script src="../data/portfolio-data.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
